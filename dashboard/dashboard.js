@@ -151,8 +151,69 @@ export function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-// Placeholder — filled in by Task 8
-export async function initFlashcards() {}
+// --- Flashcards ---
+let flashQueue = [];
+let flashIndex = 0;
+
+export async function initFlashcards() {
+  const words = await getAllWords();
+  // Prioritise new and learning words; fall back to all words if none
+  flashQueue = words.filter(w => w.status !== 'known');
+  if (flashQueue.length === 0) flashQueue = [...words];
+  flashIndex = 0;
+  showFlashcard();
+}
+
+function showFlashcard() {
+  const container = document.getElementById('flashcard');
+  const emptyEl = document.getElementById('flashcard-empty');
+
+  if (flashQueue.length === 0) {
+    container.hidden = true;
+    emptyEl.hidden = false;
+    return;
+  }
+
+  container.hidden = false;
+  emptyEl.hidden = true;
+
+  const w = flashQueue[flashIndex];
+  document.getElementById('flashcard-progress').textContent =
+    `${flashIndex + 1} / ${flashQueue.length}`;
+  document.getElementById('flashcard-word').textContent = w.word;
+  document.getElementById('flashcard-type-badge').innerHTML = typeBadge(w.wordType || 'other');
+  document.getElementById('flashcard-de-def').textContent = w.definitions?.de || '';
+
+  // Reset English reveal state
+  const enText = document.getElementById('flashcard-en-text');
+  const showBtn = document.getElementById('btn-show-english');
+  enText.hidden = true;
+  enText.textContent = w.definitions?.en || '—';
+  showBtn.hidden = false;
+}
+
+document.getElementById('btn-show-english')?.addEventListener('click', () => {
+  const enText = document.getElementById('flashcard-en-text');
+  const btn = document.getElementById('btn-show-english');
+  enText.hidden = false;
+  btn.hidden = true;
+});
+
+document.querySelectorAll('.rate-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const rating = btn.dataset.rating;
+    const w = flashQueue[flashIndex];
+    if (!w) return;
+    const statusMap = { again: 'new', hard: 'learning', good: 'learning', easy: 'known' };
+    try {
+      await updateWord(w.id, { status: statusMap[rating] });
+    } catch (err) {
+      console.error('Vokabular: Fehler beim Aktualisieren', err);
+    }
+    flashIndex = (flashIndex + 1) % flashQueue.length;
+    showFlashcard();
+  });
+});
 
 // Initial load
 await loadWords();
@@ -161,3 +222,48 @@ await loadWords();
 browser.storage.onChanged.addListener((changes) => {
   if (changes.vokabular_words) loadWords();
 });
+
+// --- Export ---
+document.getElementById('btn-export-csv')?.addEventListener('click', async () => {
+  const words = await getAllWords();
+  const csv = buildCsv(words);
+  downloadFile(csv, 'vokabular-export.csv', 'text/csv;charset=utf-8;');
+  const statusEl = document.getElementById('export-status');
+  if (statusEl) statusEl.textContent = 'CSV heruntergeladen!';
+});
+
+document.getElementById('btn-export-json')?.addEventListener('click', async () => {
+  const words = await getAllWords();
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(words, null, 2));
+    const statusEl = document.getElementById('export-status');
+    if (statusEl) statusEl.textContent = 'JSON in Zwischenablage kopiert!';
+  } catch (err) {
+    console.error('Vokabular: Clipboard-Fehler', err);
+  }
+});
+
+function buildCsv(words) {
+  const header = ['Wort', 'Englisch', 'Definition (DE)', 'Beispiel', 'Typ', 'Geschlecht', 'Plural', 'Status'];
+  const rows = words.map(w => [
+    w.word,
+    w.definitions?.en || '',
+    w.definitions?.de || '',
+    w.example || '',
+    w.wordType || '',
+    w.gender || '',
+    w.plural || '',
+    w.status || '',
+  ].map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'));
+  return [header.join(';'), ...rows].join('\n');
+}
+
+function downloadFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
