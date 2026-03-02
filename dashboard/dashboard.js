@@ -37,12 +37,12 @@ function renderWordList(words) {
 
 function typeBadge(type) {
   const labels = { verb: 'Verb', noun: 'Substantiv', adjective: 'Adjektiv', other: 'Sonstige' };
-  return `<span class="badge badge-${type}">${labels[type] || type}</span>`;
+  return `<span class="badge badge-${escapeHtml(type)}">${escapeHtml(labels[type] || type)}</span>`;
 }
 
 function statusBadge(status) {
   const labels = { new: 'Neu', learning: 'Lernend', known: 'Gelernt' };
-  return `<span class="badge badge-${status}">${labels[status] || status}</span>`;
+  return `<span class="badge badge-${escapeHtml(status)}">${escapeHtml(labels[status] || status)}</span>`;
 }
 
 function wordCardHtml(w) {
@@ -147,7 +147,8 @@ export function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // Placeholder — filled in by Task 8
