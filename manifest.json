@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Vokabular",
+  "version": "1.0.0",
+  "description": "Speichere deutsches Vokabular beim Lernen.",
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://en.wiktionary.org/*",
+    "https://api.mymemory.translated.net/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Vokabular öffnen",
+    "default_icon": {
+      "48": "icons/icon-48.svg",
+      "128": "icons/icon-128.svg"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.svg",
+    "128": "icons/icon-128.svg"
+  }
+}
