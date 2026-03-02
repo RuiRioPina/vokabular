@@ -4,7 +4,7 @@
 
 # **Vokabular**
 
-Learning German online is great — but vocabulary was a mess. Words scattered across notes, others gone forever. Vokabular fixes that: right-click any word on the page, save it instantly, and review everything in one clean dashboard.
+Learning German online is great, but vocabulary was a mess. Words scattered across notes, others gone forever. Vokabular fixes that: right-click any word on the page, save it instantly, and review everything in one clean dashboard.
 
 A Firefox/Zen browser extension for saving and learning German vocabulary.
 
