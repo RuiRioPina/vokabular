@@ -1,5 +1,5 @@
 // dashboard/dashboard.js
-import { getAllWords, updateWord } from '../src/storage.js';
+import { getAllWords, updateWord, deleteWord } from '../src/storage.js';
 
 // --- Tab switching ---
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -59,6 +59,7 @@ function wordCardHtml(w) {
     <span class="de-preview">${escapeHtml(w.definitions?.de || '')}</span>
     ${statusBadge(w.status)}
     <button class="btn-show-en" data-id="${escapeHtml(w.id)}">Zeige Englisch</button>
+    <button class="btn-delete" data-id="${escapeHtml(w.id)}">🗑</button>
   </div>
   <div class="word-card-body" hidden>
     <div class="en-translation" hidden data-en-block="${escapeHtml(w.id)}">
@@ -101,6 +102,7 @@ function attachCardListeners() {
   document.querySelectorAll('.word-card-header').forEach(header => {
     header.addEventListener('click', (e) => {
       if (e.target.classList.contains('btn-show-en')) return;
+      if (e.target.classList.contains('btn-delete')) return;
       const body = header.nextElementSibling;
       body.hidden = !body.hidden;
     });
@@ -116,6 +118,16 @@ function attachCardListeners() {
       body.hidden = false;
       enBlock.hidden = !enBlock.hidden;
       btn.textContent = enBlock.hidden ? 'Zeige Englisch' : 'Verstecke Englisch';
+    });
+  });
+
+  // Delete button
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await deleteWord(btn.dataset.id);
+      allWords = allWords.filter(w => w.id !== btn.dataset.id);
+      renderWordList(allWords);
     });
   });
 

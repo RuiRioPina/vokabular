@@ -137,6 +137,20 @@ nav { display: flex; gap: 8px; }
 
 .btn-show-en:hover { border-color: var(--green); color: var(--green); }
 
+.btn-delete {
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+  background: var(--bg);
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.btn-delete:hover { border-color: #e05a5a; color: #e05a5a; }
+
+
 .word-card-body { padding: 0 18px 18px; border-top: 1px solid var(--border); }
 
 .en-translation {
