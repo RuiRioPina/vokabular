@@ -1,5 +1,66 @@
 <!DOCTYPE html>
 <html lang="de">
-<head><meta charset="UTF-8" /><title>Vokabular</title></head>
-<body><p>Dashboard — Implemented in Task 6</p></body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vokabular</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Vokabular</h1>
+    <nav>
+      <button class="tab-btn active" data-tab="wortliste">Wortliste</button>
+      <button class="tab-btn" data-tab="karteikarten">Karteikarten</button>
+      <button class="tab-btn" data-tab="export">Export</button>
+    </nav>
+  </header>
+
+  <!-- Wortliste -->
+  <section id="tab-wortliste" class="tab-content active">
+    <div class="search-bar">
+      <input type="search" id="search-input" placeholder="Wort suchen…" />
+      <span id="word-count"></span>
+    </div>
+    <div id="word-list"></div>
+  </section>
+
+  <!-- Karteikarten -->
+  <section id="tab-karteikarten" class="tab-content">
+    <div id="flashcard-container">
+      <div id="flashcard-empty" hidden>
+        <p>Keine Wörter zum Üben. Füge zuerst Wörter hinzu!</p>
+      </div>
+      <div id="flashcard">
+        <div id="flashcard-progress"></div>
+        <div id="flashcard-word"></div>
+        <div id="flashcard-type-badge"></div>
+        <div id="flashcard-de-def"></div>
+        <div id="flashcard-en" class="hidden-translation">
+          <button id="btn-show-english">Zeige Englisch</button>
+          <div id="flashcard-en-text" hidden></div>
+        </div>
+        <div id="flashcard-rating">
+          <button class="rate-btn" data-rating="again">Nochmal</button>
+          <button class="rate-btn" data-rating="hard">Schwierig</button>
+          <button class="rate-btn" data-rating="good">Gut</button>
+          <button class="rate-btn" data-rating="easy">Einfach</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Export -->
+  <section id="tab-export" class="tab-content">
+    <div class="export-options">
+      <h2>Export</h2>
+      <p>Exportiere deine Wörter für Anki oder als Sicherung.</p>
+      <button id="btn-export-csv">Als CSV herunterladen (Anki)</button>
+      <button id="btn-export-json">Als JSON kopieren</button>
+      <div id="export-status"></div>
+    </div>
+  </section>
+
+  <script src="dashboard.js" type="module"></script>
+</body>
 </html>
