@@ -240,6 +240,8 @@ document.getElementById('btn-export-json')?.addEventListener('click', async () =
     if (statusEl) statusEl.textContent = 'JSON in Zwischenablage kopiert!';
   } catch (err) {
     console.error('Vokabular: Clipboard-Fehler', err);
+    const statusEl = document.getElementById('export-status');
+    if (statusEl) statusEl.textContent = 'Fehler beim Kopieren!';
   }
 });
 
@@ -255,7 +257,8 @@ function buildCsv(words) {
     w.plural || '',
     w.status || '',
   ].map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'));
-  return [header.join(';'), ...rows].join('\n');
+  const quotedHeader = header.map(h => `"${h}"`).join(';');
+  return [quotedHeader, ...rows].join('\n');
 }
 
 function downloadFile(content, filename, mime) {
@@ -265,5 +268,5 @@ function downloadFile(content, filename, mime) {
   a.href = url;
   a.download = filename;
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
