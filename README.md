@@ -23,7 +23,7 @@ The extension is now active.
 2. Find **Vokabular** in the list
 3. Click **Reload**
 
-Your changes take effect immediately — no need to remove and re-add the extension.
+Your changes take effect immediately. No need to remove and re-add the extension.
 
 ## Usage
 
