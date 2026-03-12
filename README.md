@@ -8,6 +8,8 @@ Learning German online is great, but vocabulary was a mess. Words scattered acro
 
 A Firefox/Zen browser extension for saving and learning German vocabulary.
 
+Download it here: https://addons.mozilla.org/en-GB/firefox/addon/vokabular/
+
 ## Installation (Zen / Firefox)
 
 1. Clone or download this repository
